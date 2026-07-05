@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Techdom Control Panel</title>
+  
+<style>
+body{
+margin:0;
+padding:14px;
+background:#2B0F1E;
+color:#fff;
+font-family:Arial,sans-serif;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+background:rgba(255,79,163,0.08);
+padding:14px;
+border-radius:12px;
+border:1px solid rgba(0,229,255,0.25);
+box-shadow:0 0 18px rgba(255,79,163,0.15);
+}
+
+h1{
+text-align:center;
+margin:8px 0 14px;
+font-size:20px;
+color:#FF4FA3;
+text-shadow:0 0 10px rgba(255,79,163,0.35);
+}
+
+.top{
+display:flex;
+gap:8px;
+margin-bottom:10px;
+}
+
+#phrase{
+flex:1;
+padding:12px;
+border:1px solid rgba(0,229,255,0.35);
+border-radius:8px;
+background:rgba(0,0,0,0.35);
+color:#fff;
+font-size:15px;
+outline:none;
+}
+
+#phrase::placeholder{color:rgba(255,255,255,0.6);}
+
+button{
+background:linear-gradient(135deg,#FF4FA3,#00E5FF);
+border:none;
+border-radius:8px;
+color:#2B0F1E;
+padding:10px;
+font-size:13px;
+cursor:pointer;
+line-height:1.15;
+white-space:pre-line;
+font-weight:bold;
+box-shadow:0 0 10px rgba(0,229,255,0.15);
+transition:transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+button:hover{
+box-shadow:0 0 16px rgba(255,79,163,0.35);
+}
+
+button:active{
+transform:scale(0.97);
+opacity:.9;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+position:relative;
+}
+
+.grid::before{
+content:"";
+position:absolute;
+top:0;
+bottom:0;
+left:50%;
+width:1px;
+background:linear-gradient(#FF4FA3,#00E5FF);
+transform:translateX(-0.5px);
+opacity:0.5;
+}
+
+.box{
+border:1px solid rgba(0,229,255,0.25);
+border-radius:10px;
+padding:10px;
+display:flex;
+flex-direction:column;
+gap:8px;
+background:rgba(0,0,0,0.25);
+}
+
+.row{
+display:flex;
+gap:8px;
+align-items:center;
+}
+
+.small{
+width:60px;
+padding:10px;
+border:1px solid rgba(255,79,163,0.4);
+border-radius:8px;
+background:rgba(0,0,0,0.35);
+color:#fff;
+text-align:center;
+}
+
+.hint{
+font-size:11px;
+opacity:.8;
+line-height:1.3;
+color:#00E5FF;
+}
+
+hr{
+border:0;
+border-top:1px solid rgba(0,229,255,0.25);
+margin:10px 0;
+}
+
+.status{
+text-align:center;
+font-size:12px;
+opacity:.85;
+margin-top:8px;
+color:#FF4FA3;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Techdom Control Panel</h1>
+
+<div class="top">
+<input id="phrase" placeholder="Text / URL / image.jpg">
+<button onclick="clearAll()">Clear</button>
+</div>
+
+<div class="grid">
+
+<div class="box">
+
+<div class="row">
+<button onclick="send('displaytext')">Display</button>
+<button onclick="send('off')">Remove</button>
+</div>
+
+<hr>
+
+<button onclick="send('androidspeak')">Android Speaks</button>
+
+<hr>
+
+<button onclick="send('openurl')">Open URL</button>
+
+</div>
+
+<div class="box">
+
+<div class="row">
+<input id="lines" class="small" placeholder="#">
+<button onclick="send('typ4me')">START
+TYPING
+BITCH</button>
+</div>
+
+<button onclick="send('goodboy')">GOOD-BOY,
+STOP TYPING</button>
+
+</div>
+
+</div>
+
+<hr>
+
+<div class="grid">
+
+<div class="box">
+
+<button onclick="send('wallpaper')">Set Wallpaper</button>
+
+<div class="row">
+<button onclick="send('wp-lock')">🔒</button><br>
+<button onclick="send('wp-unlock')">UNLOCK</button>
+</div>
+
+</div>
+
+<div class="box">
+
+<div class="row">
+<button onclick="send('speak4me')">SAY IT BITCH</button>
+<button onclick="send('cancelsays')">✕</button>
+</div>
+
+<div class="hint">
+Speech rules:<br>
+(I am 👍) (I'm or Im 👎) <br>
+No punctuation<br>
+No contractions  
+</div>
+
+</div>
+
+</div>
+
+<div class="status" id="status"></div>
+
+</div>
+
+<script>
+
+const webhook="https://trigger.macrodroid.com/c4fe6afa-2d60-411b-a512-838356eccec6/techdom";
+
+function send(type){
+let t=document.getElementById("phrase").value||"";
+let l=document.getElementById("lines").value||"";
+let url=webhook+"?tempvar="+type;
+if(t)url+="&text="+encodeURIComponent(t);
+if(type==="typ4me"&&l)url+="&lines_remaining="+encodeURIComponent(l);
+fetch(url,{method:"GET",mode:"no-cors"});
+setStatus("Sent");
+}
+
+function clearAll(){
+document.getElementById("phrase").value="";
+document.getElementById("lines").value="";
+setStatus("Cleared");
+}
+
+function setStatus(m){
+let s=document.getElementById("status");
+s.innerText=m;
+setTimeout(()=>s.innerText="",1500);
+}
+
+</script>
+
+</body>
+</html>
